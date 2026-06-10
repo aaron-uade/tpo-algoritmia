@@ -78,15 +78,7 @@ def ver_ventas():
         i += 1
 
 
-def modificar_cliente(indice=None):
-    if indice is None:
-        ver_clientes()
-        cod_cliente = int(input("Código de cliente: "))
-        if cod_cliente < 1 or cod_cliente > len(codigos_clientes):
-            print("Código inválido")
-            return
-        indice = cod_cliente - 1
-
+def modificar_campos_cliente(indice):
     mod = int(input("Modificar: 1. Nombre 2. Edad 3. Tipo: "))
     while mod < 1 or mod > 3:
         mod = int(input("Modificar: 1. Nombre 2. Edad 3. Tipo: "))
@@ -110,15 +102,16 @@ def modificar_cliente(indice=None):
         print(f"Se cambió el tipo de {nombres_clientes[indice]} a {tipo_nuevo}.")
 
 
-def modificar_producto(indice=None):
-    if indice is None:
-        ver_productos()
-        cod_producto = int(input("Código de producto: "))
-        if cod_producto < 101 or cod_producto > 110:
-            print("Código inválido")
-            return
-        indice = cod_producto - 101
+def modificar_cliente():
+    ver_clientes()
+    cod_cliente = int(input("Código de cliente: "))
+    if cod_cliente < 1 or cod_cliente > len(codigos_clientes):
+        print("Código inválido")
+        return
+    modificar_campos_cliente(cod_cliente - 1)
 
+
+def modificar_campos_producto(indice):
     mod = int(input("Modificar: 1. Nombre 2. Precio: "))
     while mod < 1 or mod > 2:
         mod = int(input("Modificar: 1. Nombre 2. Precio: "))
@@ -134,6 +127,15 @@ def modificar_producto(indice=None):
         precio_viejo = precios_productos[indice]
         precios_productos[indice] = nuevo_precio
         print(f"Se cambió el precio de {nombres_productos[indice]} de ${precio_viejo} a ${nuevo_precio}.")
+
+
+def modificar_producto():
+    ver_productos()
+    cod_producto = int(input("Código de producto: "))
+    if cod_producto < 101 or cod_producto > 110:
+        print("Código inválido")
+        return
+    modificar_campos_producto(cod_producto - 101)
 
 
 def modificar_venta():
@@ -157,11 +159,11 @@ def modificar_venta():
 
     if mod == 1:
         indice_cliente = ventas_clientes[indice_venta] - 1
-        modificar_cliente(indice_cliente)
+        modificar_campos_cliente(indice_cliente)
 
     elif mod == 2:
         indice_producto = ventas_productos[indice_venta] - 101
-        modificar_producto(indice_producto)
+        modificar_campos_producto(indice_producto)
 
     elif mod == 3:
         nueva_cantidad = int(input("Nueva cantidad: "))
