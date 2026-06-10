@@ -1,0 +1,19 @@
+tpo.py
+  s_62a1db89e9976c::t_89a1c6a17a25d2 81-82,89-91,94-98,100-104,106-110,113-114,121-123,126-130,132-136,139-141,143-155,158-191
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "636041608663b4c52557e7feb7f891ef636e8b10",
+  "prompts": {},
+  "sessions": {
+    "s_62a1db89e9976c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "aba9fcef-a86f-4894-801c-cc6c13f3ad9d",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Aaron MELI <aaron.gerez@mercadolibre.com>"
+    }
+  }
+}
