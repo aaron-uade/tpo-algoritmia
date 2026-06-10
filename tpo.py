@@ -78,117 +78,117 @@ def ver_ventas():
         i += 1
 
 
+def modificar_cliente(indice=None):
+    if indice is None:
+        ver_clientes()
+        cod_cliente = int(input("Código de cliente: "))
+        if cod_cliente < 1 or cod_cliente > len(codigos_clientes):
+            print("Código inválido")
+            return
+        indice = cod_cliente - 1
+
+    mod = int(input("Modificar: 1. Nombre 2. Edad 3. Tipo: "))
+    while mod < 1 or mod > 3:
+        mod = int(input("Modificar: 1. Nombre 2. Edad 3. Tipo: "))
+
+    if mod == 1:
+        nuevo_nombre = input("Ingrese el nuevo nombre: ")
+        nombre_viejo = nombres_clientes[indice]
+        nombres_clientes[indice] = nuevo_nombre
+        print(f"Se cambió {nombre_viejo} a {nuevo_nombre}.")
+
+    elif mod == 2:
+        nueva_edad = int(input("Ingrese la nueva edad: "))
+        edad_vieja = edades_clientes[indice]
+        edades_clientes[indice] = nueva_edad
+        print(f"Se cambió la edad de {nombres_clientes[indice]} de {edad_vieja} a {nueva_edad} años.")
+
+    else:
+        tipo_viejo = tipos_clientes[indice]
+        tipos_clientes[indice] = 2 if tipo_viejo == 1 else 1
+        tipo_nuevo = "Frecuente" if tipos_clientes[indice] == 2 else "Regular"
+        print(f"Se cambió el tipo de {nombres_clientes[indice]} a {tipo_nuevo}.")
+
+
+def modificar_producto(indice=None):
+    if indice is None:
+        ver_productos()
+        cod_producto = int(input("Código de producto: "))
+        if cod_producto < 101 or cod_producto > 110:
+            print("Código inválido")
+            return
+        indice = cod_producto - 101
+
+    mod = int(input("Modificar: 1. Nombre 2. Precio: "))
+    while mod < 1 or mod > 2:
+        mod = int(input("Modificar: 1. Nombre 2. Precio: "))
+
+    if mod == 1:
+        nuevo_nombre = input("Ingrese el nuevo nombre: ")
+        nombre_viejo = nombres_productos[indice]
+        nombres_productos[indice] = nuevo_nombre
+        print(f"Se cambió {nombre_viejo} a {nuevo_nombre}.")
+
+    else:
+        nuevo_precio = int(input("Ingrese el nuevo precio: "))
+        precio_viejo = precios_productos[indice]
+        precios_productos[indice] = nuevo_precio
+        print(f"Se cambió el precio de {nombres_productos[indice]} de ${precio_viejo} a ${nuevo_precio}.")
+
+
+def modificar_venta():
+    ver_ventas()
+    cod_venta = int(input("Código de venta: "))
+
+    indice_venta = -1
+    i = 0
+    while i < len(codigos_ventas):
+        if codigos_ventas[i] == cod_venta:
+            indice_venta = i
+        i += 1
+
+    if indice_venta == -1:
+        print("Código de venta inválido")
+        return
+
+    mod = int(input("Modificar: 1. Cliente 2. Producto 3. Cantidad 4. Medio de pago: "))
+    while mod < 1 or mod > 4:
+        mod = int(input("Modificar: 1. Cliente 2. Producto 3. Cantidad 4. Medio de pago: "))
+
+    if mod == 1:
+        indice_cliente = ventas_clientes[indice_venta] - 1
+        modificar_cliente(indice_cliente)
+
+    elif mod == 2:
+        indice_producto = ventas_productos[indice_venta] - 101
+        modificar_producto(indice_producto)
+
+    elif mod == 3:
+        nueva_cantidad = int(input("Nueva cantidad: "))
+        cantidad_vieja = ventas_cantidades[indice_venta]
+        ventas_cantidades[indice_venta] = nueva_cantidad
+        print(f"Se cambió la cantidad de {cantidad_vieja} a {nueva_cantidad}.")
+
+    else:
+        print("1. Efectivo  2. Tarjeta  3. Transferencia")
+        nuevo_medio = int(input("Nuevo medio de pago: "))
+        medio_viejo = medios_pago[indice_venta]
+        medios_pago[indice_venta] = nuevo_medio
+        print(f"Se cambió el medio de pago de {medio_viejo} a {nuevo_medio}.")
+
+
 def modificar():
     print("\n--- MODIFICAR ---")
     conjunto = int(input("1. Cliente 2. Producto 3. Venta: "))
-
     while conjunto < 1 or conjunto > 3:
         conjunto = int(input("1. Cliente 2. Producto 3. Venta: "))
 
     if conjunto == 1:
-        ver_clientes()
-        cod_cliente = int(input("Código de cliente: "))
-
-        if cod_cliente < 1 or cod_cliente > len(codigos_clientes):
-            print("Código inválido")
-            return
-
-        indice = cod_cliente - 1
-        mod = int(input("Modificar: 1. Nombre 2. Edad 3. Tipo: "))
-
-        while mod < 1 or mod > 3:
-            mod = int(input("Modificar: 1. Nombre 2. Edad 3. Tipo: "))
-
-        if mod == 1:
-            nuevo_nombre = input("Ingrese el nuevo nombre: ")
-            nombre_viejo = nombres_clientes[indice]
-            nombres_clientes[indice] = nuevo_nombre
-            print(f"Se cambió {nombre_viejo} a {nuevo_nombre}.")
-
-        elif mod == 2:
-            nueva_edad = int(input("Ingrese la nueva edad: "))
-            edad_vieja = edades_clientes[indice]
-            edades_clientes[indice] = nueva_edad
-            print(f"Se cambió la edad de {nombres_clientes[indice]} de {edad_vieja} a {nueva_edad} años.")
-
-        else:
-            tipo_viejo = tipos_clientes[indice]
-            tipos_clientes[indice] = 2 if tipo_viejo == 1 else 1
-            tipo_nuevo = "Frecuente" if tipos_clientes[indice] == 2 else "Regular"
-            print(f"Se cambió el tipo de {nombres_clientes[indice]} a {tipo_nuevo}.")
-
+        modificar_cliente()
     elif conjunto == 2:
-        ver_productos()
-        cod_producto = int(input("Código de producto: "))
-
-        if cod_producto < 101 or cod_producto > 110:
-            print("Código inválido")
-            return
-
-        indice = cod_producto - 101
-        mod = int(input("Modificar: 1. Nombre 2. Precio: "))
-
-        while mod < 1 or mod > 2:
-            mod = int(input("Modificar: 1. Nombre 2. Precio: "))
-
-        if mod == 1:
-            nuevo_nombre = input("Ingrese el nuevo nombre: ")
-            nombre_viejo = nombres_productos[indice]
-            nombres_productos[indice] = nuevo_nombre
-            print(f"Se cambió {nombre_viejo} a {nuevo_nombre}.")
-
-        else:
-            nuevo_precio = int(input("Ingrese el nuevo precio: "))
-            precio_viejo = precios_productos[indice]
-            precios_productos[indice] = nuevo_precio
-            print(f"Se cambió el precio de {nombres_productos[indice]} de ${precio_viejo} a ${nuevo_precio}.")
-
+        modificar_producto()
     else:
-        ver_ventas()
-        cod_venta = int(input("Código de venta: "))
-
-        indice_venta = -1
-        i = 0
-        while i < len(codigos_ventas):
-            if codigos_ventas[i] == cod_venta:
-                indice_venta = i
-            i += 1
-
-        if indice_venta == -1:
-            print("Código de venta inválido")
-            return
-
-        mod = int(input("Modificar: 1. Cliente 2. Producto 3. Cantidad 4. Medio de pago: "))
-
-        while mod < 1 or mod > 4:
-            mod = int(input("Modificar: 1. Cliente 2. Producto 3. Cantidad 4. Medio de pago: "))
-
-        if mod == 1:
-            ver_clientes()
-            nuevo_cliente = int(input("Nuevo código de cliente: "))
-            cliente_viejo = ventas_clientes[indice_venta]
-            ventas_clientes[indice_venta] = nuevo_cliente
-            print(f"Se cambió el cliente de {cliente_viejo} a {nuevo_cliente}.")
-
-        elif mod == 2:
-            ver_productos()
-            nuevo_producto = int(input("Nuevo código de producto: "))
-            producto_viejo = ventas_productos[indice_venta]
-            ventas_productos[indice_venta] = nuevo_producto
-            print(f"Se cambió el producto de {producto_viejo} a {nuevo_producto}.")
-
-        elif mod == 3:
-            nueva_cantidad = int(input("Nueva cantidad: "))
-            cantidad_vieja = ventas_cantidades[indice_venta]
-            ventas_cantidades[indice_venta] = nueva_cantidad
-            print(f"Se cambió la cantidad de {cantidad_vieja} a {nueva_cantidad}.")
-
-        else:
-            print("1. Efectivo  2. Tarjeta  3. Transferencia")
-            nuevo_medio = int(input("Nuevo medio de pago: "))
-            medio_viejo = medios_pago[indice_venta]
-            medios_pago[indice_venta] = nuevo_medio
-            print(f"Se cambió el medio de pago de {medio_viejo} a {nuevo_medio}.")
+        modificar_venta()
 
 def nueva_venta():
     print("\n--- NUEVA VENTA ---")
