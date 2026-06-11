@@ -160,10 +160,19 @@ def modificar_producto():
         print("Ingrese un número válido.")
         entrada = input("Código de producto: ")
     cod_producto = int(entrada)
-    if cod_producto < 101 or cod_producto > 110:
-        print("Código inválido")
+
+    indice = -1
+    i = 0
+    while i < len(codigos_productos):
+        if codigos_productos[i] == cod_producto:
+            indice = i
+        i += 1
+    
+    if indice == -1:
+        print("Ingrese un código válido: ")
         return
-    modificar_campos_producto(cod_producto - 101)
+
+    modificar_campos_producto(indice)
 
 
 def modificar_venta():
@@ -241,10 +250,15 @@ def nueva_venta():
     print("\n--- NUEVA VENTA ---")
     ver_clientes()
     entrada = input("Código de cliente: ")
+
     while not es_entero(entrada):
         print("Ingrese un número válido.")
         entrada = input("Código de cliente: ")
+
     cod_cliente = int(entrada)
+
+    while cod_cliente not in codigos_clientes:
+        cod_cliente = int(input("Ingrese un código de cliente válido: "))
 
     ver_productos()
     entrada = input("Código de producto: ")
@@ -253,11 +267,17 @@ def nueva_venta():
         entrada = input("Código de producto: ")
     cod_producto = int(entrada)
 
+    while cod_producto not in codigos_productos:
+        cod_producto = int(input("Ingrese un código de producto existente: "))
+
     entrada = input("Cantidad: ")
     while not es_entero(entrada):
         print("Ingrese un número válido.")
         entrada = input("Cantidad: ")
     cantidad = int(entrada)
+
+    while cantidad <= 0:
+        cantidad = int(input("Ingrese una cantidad mayor a 0: "))
 
     print("1. Efectivo  2. Tarjeta  3. Transferencia")
     entrada = input("Medio de pago: ")
@@ -265,6 +285,9 @@ def nueva_venta():
         print("Ingrese un número válido.")
         entrada = input("Medio de pago: ")
     medio = int(entrada)
+
+    while medio < 1 or medio > 3:
+        medio = int(input("Ingrese un medio de pago válido: "))
 
     codigos_ventas.append(max(codigos_ventas) + 1)
     ventas_clientes.append(cod_cliente)
