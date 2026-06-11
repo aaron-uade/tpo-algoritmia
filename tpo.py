@@ -23,6 +23,14 @@ ventas_cantidades = [1, 2, 3, 1, 5, 2, 1, 4, 2, 1]
 medios_pago = [1, 2, 1, 3, 2, 1, 2, 3, 1, 2]
 
 
+def es_entero(entrada):
+    try:
+        int(entrada)
+        return True
+    except:
+        return False
+
+
 def login():
     acceso = False
     i = 0
@@ -79,9 +87,11 @@ def ver_ventas():
 
 
 def modificar_campos_cliente(indice):
-    mod = int(input("Modificar: 1. Nombre 2. Edad 3. Tipo: "))
-    while mod < 1 or mod > 3:
-        mod = int(input("Modificar: 1. Nombre 2. Edad 3. Tipo: "))
+    entrada = input("Modificar: 1. Nombre 2. Edad 3. Tipo: ")
+    while not es_entero(entrada) or int(entrada) < 1 or int(entrada) > 3:
+        print("Opción inválida.")
+        entrada = input("Modificar: 1. Nombre 2. Edad 3. Tipo: ")
+    mod = int(entrada)
 
     if mod == 1:
         nuevo_nombre = input("Ingrese el nuevo nombre: ")
@@ -90,7 +100,11 @@ def modificar_campos_cliente(indice):
         print(f"Se cambió {nombre_viejo} a {nuevo_nombre}.")
 
     elif mod == 2:
-        nueva_edad = int(input("Ingrese la nueva edad: "))
+        entrada = input("Ingrese la nueva edad: ")
+        while not es_entero(entrada):
+            print("Ingrese un número válido.")
+            entrada = input("Ingrese la nueva edad: ")
+        nueva_edad = int(entrada)
         edad_vieja = edades_clientes[indice]
         edades_clientes[indice] = nueva_edad
         print(f"Se cambió la edad de {nombres_clientes[indice]} de {edad_vieja} a {nueva_edad} años.")
@@ -104,7 +118,11 @@ def modificar_campos_cliente(indice):
 
 def modificar_cliente():
     ver_clientes()
-    cod_cliente = int(input("Código de cliente: "))
+    entrada = input("Código de cliente: ")
+    while not es_entero(entrada):
+        print("Ingrese un número válido.")
+        entrada = input("Código de cliente: ")
+    cod_cliente = int(entrada)
     if cod_cliente < 1 or cod_cliente > len(codigos_clientes):
         print("Código inválido")
         return
@@ -112,9 +130,11 @@ def modificar_cliente():
 
 
 def modificar_campos_producto(indice):
-    mod = int(input("Modificar: 1. Nombre 2. Precio: "))
-    while mod < 1 or mod > 2:
-        mod = int(input("Modificar: 1. Nombre 2. Precio: "))
+    entrada = input("Modificar: 1. Nombre 2. Precio: ")
+    while not es_entero(entrada) or int(entrada) < 1 or int(entrada) > 2:
+        print("Opción inválida.")
+        entrada = input("Modificar: 1. Nombre 2. Precio: ")
+    mod = int(entrada)
 
     if mod == 1:
         nuevo_nombre = input("Ingrese el nuevo nombre: ")
@@ -123,7 +143,11 @@ def modificar_campos_producto(indice):
         print(f"Se cambió {nombre_viejo} a {nuevo_nombre}.")
 
     else:
-        nuevo_precio = int(input("Ingrese el nuevo precio: "))
+        entrada = input("Ingrese el nuevo precio: ")
+        while not es_entero(entrada):
+            print("Ingrese un número válido.")
+            entrada = input("Ingrese el nuevo precio: ")
+        nuevo_precio = int(entrada)
         precio_viejo = precios_productos[indice]
         precios_productos[indice] = nuevo_precio
         print(f"Se cambió el precio de {nombres_productos[indice]} de ${precio_viejo} a ${nuevo_precio}.")
@@ -131,7 +155,11 @@ def modificar_campos_producto(indice):
 
 def modificar_producto():
     ver_productos()
-    cod_producto = int(input("Código de producto: "))
+    entrada = input("Código de producto: ")
+    while not es_entero(entrada):
+        print("Ingrese un número válido.")
+        entrada = input("Código de producto: ")
+    cod_producto = int(entrada)
     if cod_producto < 101 or cod_producto > 110:
         print("Código inválido")
         return
@@ -140,7 +168,11 @@ def modificar_producto():
 
 def modificar_venta():
     ver_ventas()
-    cod_venta = int(input("Código de venta: "))
+    entrada = input("Código de venta: ")
+    while not es_entero(entrada):
+        print("Ingrese un número válido.")
+        entrada = input("Código de venta: ")
+    cod_venta = int(entrada)
 
     indice_venta = -1
     i = 0
@@ -153,9 +185,11 @@ def modificar_venta():
         print("Código de venta inválido")
         return
 
-    mod = int(input("Modificar: 1. Cliente 2. Producto 3. Cantidad 4. Medio de pago: "))
-    while mod < 1 or mod > 4:
-        mod = int(input("Modificar: 1. Cliente 2. Producto 3. Cantidad 4. Medio de pago: "))
+    entrada = input("Modificar: 1. Cliente 2. Producto 3. Cantidad 4. Medio de pago: ")
+    while not es_entero(entrada) or int(entrada) < 1 or int(entrada) > 4:
+        print("Opción inválida.")
+        entrada = input("Modificar: 1. Cliente 2. Producto 3. Cantidad 4. Medio de pago: ")
+    mod = int(entrada)
 
     if mod == 1:
         indice_cliente = ventas_clientes[indice_venta] - 1
@@ -166,14 +200,22 @@ def modificar_venta():
         modificar_campos_producto(indice_producto)
 
     elif mod == 3:
-        nueva_cantidad = int(input("Nueva cantidad: "))
+        entrada = input("Nueva cantidad: ")
+        while not es_entero(entrada):
+            print("Ingrese un número válido.")
+            entrada = input("Nueva cantidad: ")
+        nueva_cantidad = int(entrada)
         cantidad_vieja = ventas_cantidades[indice_venta]
         ventas_cantidades[indice_venta] = nueva_cantidad
         print(f"Se cambió la cantidad de {cantidad_vieja} a {nueva_cantidad}.")
 
     else:
         print("1. Efectivo  2. Tarjeta  3. Transferencia")
-        nuevo_medio = int(input("Nuevo medio de pago: "))
+        entrada = input("Nuevo medio de pago: ")
+        while not es_entero(entrada):
+            print("Ingrese un número válido.")
+            entrada = input("Nuevo medio de pago: ")
+        nuevo_medio = int(entrada)
         medio_viejo = medios_pago[indice_venta]
         medios_pago[indice_venta] = nuevo_medio
         print(f"Se cambió el medio de pago de {medio_viejo} a {nuevo_medio}.")
@@ -181,9 +223,11 @@ def modificar_venta():
 
 def modificar():
     print("\n--- MODIFICAR ---")
-    conjunto = int(input("1. Cliente 2. Producto 3. Venta: "))
-    while conjunto < 1 or conjunto > 3:
-        conjunto = int(input("1. Cliente 2. Producto 3. Venta: "))
+    entrada = input("1. Cliente 2. Producto 3. Venta: ")
+    while not es_entero(entrada) or int(entrada) < 1 or int(entrada) > 3:
+        print("Opción inválida.")
+        entrada = input("1. Cliente 2. Producto 3. Venta: ")
+    conjunto = int(entrada)
 
     if conjunto == 1:
         modificar_cliente()
@@ -192,15 +236,35 @@ def modificar():
     else:
         modificar_venta()
 
+
 def nueva_venta():
     print("\n--- NUEVA VENTA ---")
     ver_clientes()
-    cod_cliente = int(input("Código de cliente: "))
+    entrada = input("Código de cliente: ")
+    while not es_entero(entrada):
+        print("Ingrese un número válido.")
+        entrada = input("Código de cliente: ")
+    cod_cliente = int(entrada)
+
     ver_productos()
-    cod_producto = int(input("Código de producto: "))
-    cantidad = int(input("Cantidad: "))
+    entrada = input("Código de producto: ")
+    while not es_entero(entrada):
+        print("Ingrese un número válido.")
+        entrada = input("Código de producto: ")
+    cod_producto = int(entrada)
+
+    entrada = input("Cantidad: ")
+    while not es_entero(entrada):
+        print("Ingrese un número válido.")
+        entrada = input("Cantidad: ")
+    cantidad = int(entrada)
+
     print("1. Efectivo  2. Tarjeta  3. Transferencia")
-    medio = int(input("Medio de pago: "))
+    entrada = input("Medio de pago: ")
+    while not es_entero(entrada):
+        print("Ingrese un número válido.")
+        entrada = input("Medio de pago: ")
+    medio = int(entrada)
 
     codigos_ventas.append(max(codigos_ventas) + 1)
     ventas_clientes.append(cod_cliente)
