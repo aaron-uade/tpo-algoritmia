@@ -13,7 +13,7 @@ tipos_clientes = [1, 2, 1, 2, 1, 2, 1, 1, 2, 1]
 codigos_productos = [101, 102, 103, 104, 105, 106, 107, 108, 109, 110]
 nombres_productos = ["Laptop", "Mouse", "Teclado", "Monitor", "Cable USB", "Auriculares", "Webcam", "Hub USB",
                      "Mousepad", "Adaptador HDMI"]
-precios_productos = [500, 25, 80, 200, 10, 60, 75, 35, 15, 20]
+precios_productos = [499.99, 24.99, 19.99, 199.99, 9.99, 59.99, 74.99, 35.49, 15.99, 19.49]
 
 # Ventas
 codigos_ventas = [1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010]
@@ -22,13 +22,49 @@ ventas_productos = [101, 103, 102, 104, 105, 106, 107, 108, 109, 110]
 ventas_cantidades = [1, 2, 3, 1, 5, 2, 1, 4, 2, 1]
 medios_pago = [1, 2, 1, 3, 2, 1, 2, 3, 1, 2]
 
+edad_maxima = 99
 
-def es_entero(entrada):
-    try:
-        int(entrada)
-        return True
-    except:
-        return False
+
+def es_numero(entrada, tipo):
+    match tipo:
+        case "int":
+            try:
+                int(entrada)
+                return True
+            except:
+                return False
+        case "float":
+            try:
+                float(entrada)
+                return True
+            except:
+                return False
+        case _:
+            return False
+    
+def validar_entrada_numerica_en_lista(entrada, lista):
+    while (not es_numero(entrada, "int") or int(entrada) in lista or int(entrada) <= 0):
+        print("La entrada ingresada es inválida. Debe ser un NÚMERO positivo y no debe existir en la lista.")
+        entrada = input("Ingrese nuevamente la entrada: ")
+    return int(entrada)
+
+def validar_edad(entrada):
+    while (not es_numero(entrada, "int") or int(entrada) <= 0 or int(entrada) >= 99):
+        print("La entrada ingresada es inválida. Debe ser un NÚMERO positivo.")
+        entrada = input("Ingrese nuevamente la entrada: ")
+    return int(entrada)
+
+def validar_tipo(entrada):
+    while (not es_numero(entrada, "int") or int(entrada) < 1 or int(entrada) > 2):
+        print("La entrada ingresada es inválida. Debe ser un NÚMERO entre 1 y 2.")
+        entrada = input("Ingrese nuevamente la entrada: ")
+    return int(entrada)
+
+def validar_precio(entrada):
+    while (not es_numero(entrada, "float") or float(entrada) < 1):
+        print("El valor ingresado es inválido.")
+        entrada = input("Ingrese un precio válido: ")
+    return float(entrada)
 
 
 def login():
@@ -51,7 +87,7 @@ def mostrar_menu():
     print("1. Ver clientes")
     print("2. Ver productos")
     print("3. Ver ventas")
-    print("4. Nueva venta")
+    print("4. Dar de Alta")
     print("5. Modificar")
     print("6. Salir")
     opcion = input("Selecciona una opción: ")
@@ -71,24 +107,44 @@ def ver_productos():
     print("\n--- PRODUCTOS ---")
     i = 0
     while i < len(codigos_productos):
-        print(f"Cod: {codigos_productos[i]} | {nombres_productos[i]} | ${precios_productos[i]}")
+        print(f"Cod: {codigos_productos[i]} | {nombres_productos[i]} | ${precios_productos[i]:.2f}")
         i += 1
 
 
+def obtener_indice_por_codigo(codigos, codigo):
+    i = 0
+    while i < len(codigos):
+        if codigos[i] == codigo:
+            return i
+        i += 1
+    return -1
+
+
 def ver_ventas():
-    print("\n--- HISTORIAL DE VENTAS ---")
+    print("--- HISTORIAL DE VENTAS ---")
     i = 0
     while i < len(codigos_ventas):
-        nombre_cliente = nombres_clientes[ventas_clientes[i] - 1]
-        nombre_producto = nombres_productos[ventas_productos[i] - 101]
-        total = ventas_cantidades[i] * precios_productos[ventas_productos[i] - 101]
-        print(f"Venta {codigos_ventas[i]} | {nombre_cliente} | {nombre_producto} x{ventas_cantidades[i]} | ${total}")
+        indice_cliente = obtener_indice_por_codigo(codigos_clientes, ventas_clientes[i])
+        if indice_cliente == -1:
+            nombre_cliente = "Cliente desconocido"
+        else:
+            nombre_cliente = nombres_clientes[indice_cliente]
+
+        indice_producto = obtener_indice_por_codigo(codigos_productos, ventas_productos[i])
+        if indice_producto == -1:
+            nombre_producto = "Producto desconocido"
+            total = 0
+        else:
+            nombre_producto = nombres_productos[indice_producto]
+            total = ventas_cantidades[i] * precios_productos[indice_producto]
+
+        print(f"Venta {codigos_ventas[i]} | {nombre_cliente} | {nombre_producto} x{ventas_cantidades[i]} | ${total:.2f}")
         i += 1
 
 
 def modificar_campos_cliente(indice):
     entrada = input("Modificar: 1. Nombre 2. Edad 3. Tipo: ")
-    while not es_entero(entrada) or int(entrada) < 1 or int(entrada) > 3:
+    while not es_numero(entrada, "int") or int(entrada) < 1 or int(entrada) > 3:
         print("Opción inválida.")
         entrada = input("Modificar: 1. Nombre 2. Edad 3. Tipo: ")
     mod = int(entrada)
@@ -101,7 +157,7 @@ def modificar_campos_cliente(indice):
 
     elif mod == 2:
         entrada = input("Ingrese la nueva edad: ")
-        while not es_entero(entrada):
+        while not es_numero(entrada, "int"):
             print("Ingrese un número válido.")
             entrada = input("Ingrese la nueva edad: ")
         nueva_edad = int(entrada)
@@ -119,19 +175,20 @@ def modificar_campos_cliente(indice):
 def modificar_cliente():
     ver_clientes()
     entrada = input("Código de cliente: ")
-    while not es_entero(entrada):
+    while not es_numero(entrada, "int"):
         print("Ingrese un número válido.")
         entrada = input("Código de cliente: ")
     cod_cliente = int(entrada)
-    if cod_cliente < 1 or cod_cliente > len(codigos_clientes):
+    indice_cliente = obtener_indice_por_codigo(codigos_clientes, cod_cliente)
+    if indice_cliente == -1:
         print("Código inválido")
         return
-    modificar_campos_cliente(cod_cliente - 1)
+    modificar_campos_cliente(indice_cliente)
 
 
 def modificar_campos_producto(indice):
     entrada = input("Modificar: 1. Nombre 2. Precio: ")
-    while not es_entero(entrada) or int(entrada) < 1 or int(entrada) > 2:
+    while not es_numero(entrada, "int") or int(entrada) < 1 or int(entrada) > 2:
         print("Opción inválida.")
         entrada = input("Modificar: 1. Nombre 2. Precio: ")
     mod = int(entrada)
@@ -144,10 +201,10 @@ def modificar_campos_producto(indice):
 
     else:
         entrada = input("Ingrese el nuevo precio: ")
-        while not es_entero(entrada):
+        while not es_numero(entrada, "float"):
             print("Ingrese un número válido.")
             entrada = input("Ingrese el nuevo precio: ")
-        nuevo_precio = int(entrada)
+        nuevo_precio = float(entrada)
         precio_viejo = precios_productos[indice]
         precios_productos[indice] = nuevo_precio
         print(f"Se cambió el precio de {nombres_productos[indice]} de ${precio_viejo} a ${nuevo_precio}.")
@@ -156,18 +213,12 @@ def modificar_campos_producto(indice):
 def modificar_producto():
     ver_productos()
     entrada = input("Código de producto: ")
-    while not es_entero(entrada):
+    while not es_numero(entrada, "int"):
         print("Ingrese un número válido.")
         entrada = input("Código de producto: ")
     cod_producto = int(entrada)
 
-    indice = -1
-    i = 0
-    while i < len(codigos_productos):
-        if codigos_productos[i] == cod_producto:
-            indice = i
-        i += 1
-    
+    indice = obtener_indice_por_codigo(codigos_productos, cod_producto)
     if indice == -1:
         print("Ingrese un código válido: ")
         return
@@ -178,7 +229,7 @@ def modificar_producto():
 def modificar_venta():
     ver_ventas()
     entrada = input("Código de venta: ")
-    while not es_entero(entrada):
+    while not es_numero(entrada, "int"):
         print("Ingrese un número válido.")
         entrada = input("Código de venta: ")
     cod_venta = int(entrada)
@@ -195,22 +246,28 @@ def modificar_venta():
         return
 
     entrada = input("Modificar: 1. Cliente 2. Producto 3. Cantidad 4. Medio de pago: ")
-    while not es_entero(entrada) or int(entrada) < 1 or int(entrada) > 4:
+    while not es_numero(entrada, "int") or int(entrada) < 1 or int(entrada) > 4:
         print("Opción inválida.")
         entrada = input("Modificar: 1. Cliente 2. Producto 3. Cantidad 4. Medio de pago: ")
     mod = int(entrada)
 
     if mod == 1:
-        indice_cliente = ventas_clientes[indice_venta] - 1
+        indice_cliente = obtener_indice_por_codigo(codigos_clientes, ventas_clientes[indice_venta])
+        if indice_cliente == -1:
+            print("Cliente de la venta no existe en el registro.")
+            return
         modificar_campos_cliente(indice_cliente)
 
     elif mod == 2:
-        indice_producto = ventas_productos[indice_venta] - 101
+        indice_producto = obtener_indice_por_codigo(codigos_productos, ventas_productos[indice_venta])
+        if indice_producto == -1:
+            print("Producto de la venta no existe en el catálogo.")
+            return
         modificar_campos_producto(indice_producto)
 
     elif mod == 3:
         entrada = input("Nueva cantidad: ")
-        while not es_entero(entrada):
+        while not es_numero(entrada, "int"):
             print("Ingrese un número válido.")
             entrada = input("Nueva cantidad: ")
         nueva_cantidad = int(entrada)
@@ -221,7 +278,7 @@ def modificar_venta():
     else:
         print("1. Efectivo  2. Tarjeta  3. Transferencia")
         entrada = input("Nuevo medio de pago: ")
-        while not es_entero(entrada):
+        while not es_numero(entrada, "int"):
             print("Ingrese un número válido.")
             entrada = input("Nuevo medio de pago: ")
         nuevo_medio = int(entrada)
@@ -233,7 +290,7 @@ def modificar_venta():
 def modificar():
     print("\n--- MODIFICAR ---")
     entrada = input("1. Cliente 2. Producto 3. Venta: ")
-    while not es_entero(entrada) or int(entrada) < 1 or int(entrada) > 3:
+    while not es_numero(entrada, "int") or int(entrada) < 1 or int(entrada) > 3:
         print("Opción inválida.")
         entrada = input("1. Cliente 2. Producto 3. Venta: ")
     conjunto = int(entrada)
@@ -246,12 +303,51 @@ def modificar():
         modificar_venta()
 
 
+def nuevo_cliente():
+    print("\n--- NUEVO CLIENTE---")
+    ver_clientes()
+    entrada_cliente = input("Codigo de cliente: ")
+
+    cod_cliente = validar_entrada_numerica_en_lista(entrada_cliente, codigos_clientes)
+
+    nombre_cliente = input("Nombre de cliente: ")
+
+    entrada_edad = input("Edad de cliente: ")
+
+    edad_cliente = validar_edad(entrada_edad)
+    
+    entrada_tipo_cliente = input("Tipo de cliente: 1. Regular 2. Frecuente ")
+
+    tipo_cliente = validar_tipo(entrada_tipo_cliente)
+    
+    codigos_clientes.append(cod_cliente)
+    nombres_clientes.append(nombre_cliente)
+    edades_clientes.append(edad_cliente)
+    tipos_clientes.append(tipo_cliente)
+
+
+def nuevo_producto():
+    print("\n--- NUEVO PRODUCTO---")
+    ver_productos()
+
+    entrada_producto = input("Codigo de producto: ")
+    cod_producto = validar_entrada_numerica_en_lista(entrada_producto, codigos_productos)
+
+    nombre_producto = input("Nombre del producto ")
+
+    entrada_precio = input("Precio del producto ")
+    precio_producto = validar_precio(entrada_precio)
+
+    codigos_productos.append(cod_producto)
+    nombres_productos.append(nombre_producto)
+    precios_productos.append(precio_producto)
+
 def nueva_venta():
     print("\n--- NUEVA VENTA ---")
     ver_clientes()
     entrada = input("Código de cliente: ")
 
-    while not es_entero(entrada):
+    while not es_numero(entrada, "int"):
         print("Ingrese un número válido.")
         entrada = input("Código de cliente: ")
 
@@ -262,7 +358,7 @@ def nueva_venta():
 
     ver_productos()
     entrada = input("Código de producto: ")
-    while not es_entero(entrada):
+    while not es_numero(entrada, "int"):
         print("Ingrese un número válido.")
         entrada = input("Código de producto: ")
     cod_producto = int(entrada)
@@ -271,7 +367,7 @@ def nueva_venta():
         cod_producto = int(input("Ingrese un código de producto existente: "))
 
     entrada = input("Cantidad: ")
-    while not es_entero(entrada):
+    while not es_numero(entrada, "int"):
         print("Ingrese un número válido.")
         entrada = input("Cantidad: ")
     cantidad = int(entrada)
@@ -281,7 +377,7 @@ def nueva_venta():
 
     print("1. Efectivo  2. Tarjeta  3. Transferencia")
     entrada = input("Medio de pago: ")
-    while not es_entero(entrada):
+    while not es_numero(entrada, "int"):
         print("Ingrese un número válido.")
         entrada = input("Medio de pago: ")
     medio = int(entrada)
@@ -295,6 +391,23 @@ def nueva_venta():
     ventas_cantidades.append(cantidad)
     medios_pago.append(medio)
     print("Venta registrada")
+
+
+def dar_de_alta():
+    print("\n---DAR DE ALTA---")
+    print("1-Cliente")
+    print("2-Producto")
+    print("3-Venta")
+    alta = input("¿Qué desea dar de alta? ")
+
+    if alta == "1":
+        nuevo_cliente()
+    elif alta == "2":
+        nuevo_producto()
+    elif alta == "3":
+        nueva_venta()
+    else:
+        print("\n No ingresó una de las opciones disponibles")
 
 
 # Programa principal
@@ -314,7 +427,7 @@ if login_usuario:
         elif opcion == "3":
             ver_ventas()
         elif opcion == "4":
-            nueva_venta()
+            dar_de_alta()
         elif opcion == "5":
             modificar()
         elif opcion == "6":
