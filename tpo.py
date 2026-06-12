@@ -67,6 +67,27 @@ def validar_precio(entrada):
     return float(entrada)
 
 
+def validar_codigo_existente(entrada, codigos):
+    while not es_numero(entrada, "int") or int(entrada) not in codigos:
+        print("Ingrese un código existente y válido.")
+        entrada = input("Ingrese nuevamente: ")
+    return int(entrada)
+
+
+def validar_entero_positivo(entrada):
+    while not es_numero(entrada, "int") or int(entrada) <= 0:
+        print("Ingrese un número entero positivo.")
+        entrada = input("Ingrese nuevamente: ")
+    return int(entrada)
+
+
+def validar_opcion_entre(entrada, minimo, maximo):
+    while not es_numero(entrada, "int") or int(entrada) < minimo or int(entrada) > maximo:
+        print(f"Ingrese un número entre {minimo} y {maximo}.")
+        entrada = input("Ingrese nuevamente: ")
+    return int(entrada)
+
+
 def login():
     acceso = False
     i = 0
@@ -346,44 +367,18 @@ def nueva_venta():
     print("\n--- NUEVA VENTA ---")
     ver_clientes()
     entrada = input("Código de cliente: ")
-
-    while not es_numero(entrada, "int"):
-        print("Ingrese un número válido.")
-        entrada = input("Código de cliente: ")
-
-    cod_cliente = int(entrada)
-
-    while cod_cliente not in codigos_clientes:
-        cod_cliente = int(input("Ingrese un código de cliente válido: "))
+    cod_cliente = validar_codigo_existente(entrada, codigos_clientes)
 
     ver_productos()
     entrada = input("Código de producto: ")
-    while not es_numero(entrada, "int"):
-        print("Ingrese un número válido.")
-        entrada = input("Código de producto: ")
-    cod_producto = int(entrada)
-
-    while cod_producto not in codigos_productos:
-        cod_producto = int(input("Ingrese un código de producto existente: "))
+    cod_producto = validar_codigo_existente(entrada, codigos_productos)
 
     entrada = input("Cantidad: ")
-    while not es_numero(entrada, "int"):
-        print("Ingrese un número válido.")
-        entrada = input("Cantidad: ")
-    cantidad = int(entrada)
-
-    while cantidad <= 0:
-        cantidad = int(input("Ingrese una cantidad mayor a 0: "))
+    cantidad = validar_entero_positivo(entrada)
 
     print("1. Efectivo  2. Tarjeta  3. Transferencia")
     entrada = input("Medio de pago: ")
-    while not es_numero(entrada, "int"):
-        print("Ingrese un número válido.")
-        entrada = input("Medio de pago: ")
-    medio = int(entrada)
-
-    while medio < 1 or medio > 3:
-        medio = int(input("Ingrese un medio de pago válido: "))
+    medio = validar_opcion_entre(entrada, 1, 3)
 
     codigos_ventas.append(max(codigos_ventas) + 1)
     ventas_clientes.append(cod_cliente)
