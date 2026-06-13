@@ -4,7 +4,11 @@ from validaciones.validadores import (
     es_numero, validar_entrada_numerica_en_lista, validar_edad, validar_tipo,
     validar_precio, validar_codigo_existente, validar_entero_positivo, validar_opcion_entre
 )
-from utils.utilidades import login, mostrar_menu, obtener_indice_por_codigo, ver_clientes, ver_productos, ver_ventas
+from utils.utilidades import (
+    login, mostrar_menu, mostrar_menu_principal, mostrar_submenu, preguntar_orden,
+    obtener_indice_por_codigo, ver_clientes, ver_productos, ver_ventas,
+    ordenar_burbuja, ordenar_seleccion, ordenar_insercion
+)
 
 usuarios = ["admin"]
 claves = ["1234"]
@@ -235,11 +239,11 @@ def nuevo_producto():
 
 def nueva_venta():
     print("\n--- NUEVA VENTA ---")
-    ver_clientes()
+    ver_clientes(codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes)
     entrada = input("Código de cliente: ")
     cod_cliente = validar_codigo_existente(entrada, codigos_clientes)
 
-    ver_productos()
+    ver_productos(codigos_productos, nombres_productos, precios_productos)
     entrada = input("Código de producto: ")
     cod_producto = validar_codigo_existente(entrada, codigos_productos)
 
@@ -275,6 +279,147 @@ def dar_de_alta():
         print("\n No ingresó una de las opciones disponibles")
 
 
+def listar_clientes():
+    entrada = preguntar_orden()
+    while not es_numero(entrada, "int") or int(entrada) < 1 or int(entrada) > 3:
+        print("Opción inválida.")
+        entrada = preguntar_orden()
+    orden = int(entrada)
+
+    if orden == 1:
+        ver_clientes(codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes)
+        return
+
+    es_descendente = orden == 3
+
+    print("Ordenar por: 1. Código 2. Edad")
+    entrada = input("Seleccione una opción: ")
+    while not es_numero(entrada, "int") or int(entrada) < 1 or int(entrada) > 2:
+        print("Opción inválida.")
+        entrada = input("Seleccione una opción: ")
+    campo = int(entrada)
+
+    indice_clave = 0 if campo == 1 else 2
+
+    listas = [codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes]
+    listas_ordenadas = ordenar_burbuja(listas, indice_clave, es_descendente)
+    ver_clientes(listas_ordenadas[0], listas_ordenadas[1], listas_ordenadas[2], listas_ordenadas[3])
+
+
+def listar_productos():
+    entrada = preguntar_orden()
+    while not es_numero(entrada, "int") or int(entrada) < 1 or int(entrada) > 3:
+        print("Opción inválida.")
+        entrada = preguntar_orden()
+    orden = int(entrada)
+
+    if orden == 1:
+        ver_productos(codigos_productos, nombres_productos, precios_productos)
+        return
+
+    es_descendente = orden == 3
+
+    print("Ordenar por: 1. Código 2. Precio")
+    entrada = input("Seleccione una opción: ")
+    while not es_numero(entrada, "int") or int(entrada) < 1 or int(entrada) > 2:
+        print("Opción inválida.")
+        entrada = input("Seleccione una opción: ")
+    campo = int(entrada)
+
+    indice_clave = 0 if campo == 1 else 2
+
+    listas = [codigos_productos, nombres_productos, precios_productos]
+    listas_ordenadas = ordenar_seleccion(listas, indice_clave, es_descendente)
+    ver_productos(listas_ordenadas[0], listas_ordenadas[1], listas_ordenadas[2])
+
+
+def listar_ventas():
+    entrada = preguntar_orden()
+    while not es_numero(entrada, "int") or int(entrada) < 1 or int(entrada) > 3:
+        print("Opción inválida.")
+        entrada = preguntar_orden()
+    orden = int(entrada)
+
+    if orden == 1:
+        ver_ventas(codigos_ventas, ventas_clientes, codigos_clientes, nombres_clientes,
+                   ventas_productos, codigos_productos, nombres_productos,
+                   ventas_cantidades, precios_productos)
+        return
+
+    es_descendente = orden == 3
+
+    print("Ordenar por: 1. Código 2. Cantidad 3. Medio de pago")
+    entrada = input("Seleccione una opción: ")
+    while not es_numero(entrada, "int") or int(entrada) < 1 or int(entrada) > 3:
+        print("Opción inválida.")
+        entrada = input("Seleccione una opción: ")
+    campo = int(entrada)
+
+    if campo == 1:
+        indice_clave = 0
+    elif campo == 2:
+        indice_clave = 3
+    else:
+        indice_clave = 4
+
+    listas = [codigos_ventas, ventas_clientes, ventas_productos, ventas_cantidades, medios_pago]
+    listas_ordenadas = ordenar_insercion(listas, indice_clave, es_descendente)
+    ver_ventas(listas_ordenadas[0], listas_ordenadas[1], codigos_clientes, nombres_clientes,
+               listas_ordenadas[2], codigos_productos, nombres_productos,
+               listas_ordenadas[3], precios_productos)
+
+
+def menu_clientes():
+    volver = False
+    while volver == False:
+        opcion = mostrar_submenu("Clientes")
+
+        if opcion == "1":
+            listar_clientes()
+        elif opcion == "2":
+            nuevo_cliente()
+        elif opcion == "3":
+            modificar_cliente()
+        elif opcion == "4":
+            volver = True
+        else:
+            print("Opción inválida")
+
+
+def menu_productos():
+    volver = False
+    while volver == False:
+        opcion = mostrar_submenu("Productos")
+
+        if opcion == "1":
+            listar_productos()
+        elif opcion == "2":
+            nuevo_producto()
+        elif opcion == "3":
+            modificar_producto()
+        elif opcion == "4":
+            volver = True
+        else:
+            print("Opción inválida")
+
+
+def menu_ventas():
+    volver = False
+    while volver == False:
+        opcion = mostrar_submenu("Ventas")
+
+        if opcion == "1":
+            listar_ventas()
+        elif opcion == "2":
+            nueva_venta()
+        elif opcion == "3":
+            modificar_venta()
+        elif opcion == "4":
+            volver = True
+        else:
+            print("Opción inválida")
+
+
 # Programa principal
 login_usuario = login(usuarios, claves)
 
@@ -283,21 +428,15 @@ if login_usuario:
 
     salir = False
     while salir == False:
-        opcion = mostrar_menu()
+        opcion = mostrar_menu_principal()
 
         if opcion == "1":
-            ver_clientes(codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes)
+            menu_clientes()
         elif opcion == "2":
-            ver_productos(codigos_productos, nombres_productos, precios_productos)
+            menu_productos()
         elif opcion == "3":
-            ver_ventas(codigos_ventas, ventas_clientes, codigos_clientes, nombres_clientes,
-                       ventas_productos, codigos_productos, nombres_productos,
-                       ventas_cantidades, precios_productos)
+            menu_ventas()
         elif opcion == "4":
-            dar_de_alta()
-        elif opcion == "5":
-            modificar()
-        elif opcion == "6":
             print("Hasta luego")
             salir = True
         else:
