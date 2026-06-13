@@ -12,19 +12,6 @@ def login(usuarios, claves):
 
     return False
 
-
-def mostrar_menu():
-    print("\n--- MENU ---")
-    print("1. Ver clientes")
-    print("2. Ver productos")
-    print("3. Ver ventas")
-    print("4. Dar de Alta")
-    print("5. Modificar")
-    print("6. Salir")
-    opcion = input("Selecciona una opción: ")
-    return opcion
-
-
 def obtener_indice_por_codigo(codigos, codigo):
     i = 0
     while i < len(codigos):

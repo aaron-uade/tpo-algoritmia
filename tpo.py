@@ -5,7 +5,7 @@ from validaciones.validadores import (
     validar_precio, validar_codigo_existente, validar_entero_positivo, validar_opcion_entre
 )
 from utils.utilidades import (
-    login, mostrar_menu, mostrar_menu_principal, mostrar_submenu, preguntar_orden,
+    login, mostrar_menu_principal, mostrar_submenu, preguntar_orden,
     obtener_indice_por_codigo, ver_clientes, ver_productos, ver_ventas,
     ordenar_burbuja, ordenar_seleccion, ordenar_insercion
 )
