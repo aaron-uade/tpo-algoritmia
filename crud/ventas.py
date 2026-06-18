@@ -1,6 +1,6 @@
 from validaciones.validadores import es_numero, validar_codigo_existente, validar_entero_positivo, validar_opcion_entre
-from crud.clientes import modificar_cliente
-from crud.productos import modificar_producto
+from crud.clientes import modificar_cliente, ver_clientes
+from crud.productos import modificar_producto, ver_productos
 from utils.utilidades import ordenar_insercion, preguntar_orden, obtener_indice_por_codigo
 from constantes.constantes import medios_pago
 
