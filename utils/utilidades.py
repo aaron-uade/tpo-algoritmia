@@ -77,7 +77,8 @@ def mostrar_submenu(nombre):
     print("1. Listar")
     print("2. Nuevo")
     print("3. Modificar")
-    print("4. Volver al menú principal")
+    print("4. Buscar")
+    print("5. Volver al menú principal")
     opcion = input("Selecciona una opción: ")
     return opcion
 
@@ -179,3 +180,25 @@ def ordenar_insercion(listas, indice_clave, es_descendente):
         i += 1
 
     return copias
+
+def busqueda_secuencial(lista, valor):
+    k = 0
+    for k in range(len(lista) - 1):
+        if lista[k] == valor:
+            return k
+        k += 1
+    return -1
+
+def busqueda_binaria(lista, valor):
+    izq = 0
+    der = len(lista) - 1
+
+    while izq <= der:
+        medio = (izq + der) // 2
+        if lista[medio] == valor:
+            return medio
+        elif lista[medio] < valor:
+            izq = medio + 1
+        elif lista[medio] > valor:
+            der = medio - 1
+    return -1
