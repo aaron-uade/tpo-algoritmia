@@ -2,6 +2,7 @@ from validaciones.validadores import es_numero, validar_codigo_existente, valida
 from utils.utilidades import ver_ventas, ver_clientes, ver_productos, ordenar_insercion, preguntar_orden, obtener_indice_por_codigo
 from crud.clientes import modificar_cliente
 from crud.productos import modificar_producto
+from constantes.constantes import medios_pago
 
 
 def listar_ventas(codigos_ventas, ventas_clientes, codigos_clientes, nombres_clientes,
