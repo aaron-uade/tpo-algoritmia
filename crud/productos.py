@@ -1,5 +1,13 @@
 from validaciones.validadores import es_numero, validar_entrada_numerica_en_lista, validar_precio
-from utils.utilidades import ver_productos, ordenar_seleccion, preguntar_orden, obtener_indice_por_codigo
+from utils.utilidades import ordenar_seleccion, preguntar_orden, obtener_indice_por_codigo
+
+
+def ver_productos(codigos_productos, nombres_productos, precios_productos):
+    print("\n--- PRODUCTOS ---")
+    i = 0
+    while i < len(codigos_productos):
+        print(f"Cod: {codigos_productos[i]} | {nombres_productos[i]} | ${precios_productos[i]:.2f}")
+        i += 1
 
 
 def listar_productos(codigos_productos, nombres_productos, precios_productos):

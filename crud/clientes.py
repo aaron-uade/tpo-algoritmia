@@ -1,5 +1,14 @@
 from validaciones.validadores import es_numero, validar_entrada_numerica_en_lista, validar_edad, validar_tipo
-from utils.utilidades import ver_clientes, ordenar_burbuja, preguntar_orden, obtener_indice_por_codigo
+from utils.utilidades import ordenar_burbuja, preguntar_orden, obtener_indice_por_codigo
+
+
+def ver_clientes(codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes):
+    print("\n--- CLIENTES ---")
+    i = 0
+    while i < len(codigos_clientes):
+        tipo = "Regular" if tipos_clientes[i] == 1 else "Frecuente"
+        print(f"Cod: {codigos_clientes[i]} | {nombres_clientes[i]} | Edad: {edades_clientes[i]} | {tipo}")
+        i += 1
 
 
 def listar_clientes(codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes):

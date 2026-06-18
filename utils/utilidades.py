@@ -21,47 +21,6 @@ def obtener_indice_por_codigo(codigos, codigo):
     return -1
 
 
-def ver_clientes(codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes):
-    print("\n--- CLIENTES ---")
-    i = 0
-    while i < len(codigos_clientes):
-        tipo = "Regular" if tipos_clientes[i] == 1 else "Frecuente"
-        print(f"Cod: {codigos_clientes[i]} | {nombres_clientes[i]} | Edad: {edades_clientes[i]} | {tipo}")
-        i += 1
-
-
-def ver_productos(codigos_productos, nombres_productos, precios_productos):
-    print("\n--- PRODUCTOS ---")
-    i = 0
-    while i < len(codigos_productos):
-        print(f"Cod: {codigos_productos[i]} | {nombres_productos[i]} | ${precios_productos[i]:.2f}")
-        i += 1
-
-
-def ver_ventas(codigos_ventas, ventas_clientes, codigos_clientes, nombres_clientes,
-               ventas_productos, codigos_productos, nombres_productos,
-               ventas_cantidades, precios_productos):
-    print("\n--- HISTORIAL DE VENTAS ---")
-    i = 0
-    while i < len(codigos_ventas):
-        indice_cliente = obtener_indice_por_codigo(codigos_clientes, ventas_clientes[i])
-        if indice_cliente == -1:
-            nombre_cliente = "Cliente desconocido"
-        else:
-            nombre_cliente = nombres_clientes[indice_cliente]
-
-        indice_producto = obtener_indice_por_codigo(codigos_productos, ventas_productos[i])
-        if indice_producto == -1:
-            nombre_producto = "Producto desconocido"
-            total = 0
-        else:
-            nombre_producto = nombres_productos[indice_producto]
-            total = ventas_cantidades[i] * precios_productos[indice_producto]
-
-        print(f"Venta {codigos_ventas[i]} | {nombre_cliente} | {nombre_producto} x{ventas_cantidades[i]} | ${total:.2f}")
-        i += 1
-
-
 def mostrar_menu_principal():
     print("\n--- MENU PRINCIPAL ---")
     print("1. Clientes")
