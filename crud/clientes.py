@@ -11,6 +11,7 @@ from utils.utilidades import (
     pedir_indice_por_codigo,
     existe_en_lista,
     eliminar_en_listas_paralelas,
+    busqueda_binaria,
 )
 
 
@@ -74,8 +75,22 @@ def modificar_cliente(codigos_clientes, nombres_clientes, edades_clientes, tipos
 
 
 def buscar_cliente(codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes):
-    _, indice = pedir_indice_por_codigo("Ingrese el codigo que desea buscar: ", codigos_clientes)
-    mostrar_cliente(indice, codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes)
+    entrada = input("Ingrese el codigo que desea buscar: ")
+    while not es_numero(entrada, "int"):
+        print("Ingrese un numero valido.")
+        entrada = input("Ingrese el codigo que desea buscar: ")
+
+    codigo = int(entrada)
+
+    listas = [codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes]
+    listas_ordenadas = ordenar_burbuja(listas, 0, False)
+    indice = busqueda_binaria(listas_ordenadas[0], codigo)
+
+    if indice == -1:
+        print("No se encontro el valor en la lista.")
+        return
+
+    mostrar_cliente(indice, listas_ordenadas[0], listas_ordenadas[1], listas_ordenadas[2], listas_ordenadas[3])
 
 
 def mostrar_cliente(indice, codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes):

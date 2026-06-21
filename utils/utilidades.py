@@ -136,12 +136,35 @@ def ordenar_insercion(listas, indice_clave, es_descendente):
 
 
 def obtener_indice_por_codigo(codigos, codigo):
+    '''
+    Busqueda secuencial para encontrar el indice de un codigo en una lista de codigos.
+    Retorna el indice si se encuentra, o -1 si no se encuentra.
+    '''
     i = 0
     while i < len(codigos):
         if codigos[i] == codigo:
             return i
         i += 1
     return -1
+
+def busqueda_binaria(lista, valor):
+    '''
+    Busqueda binaria para encontrar el indice de un valor en una lista ordenada.
+    Retorna el indice si se encuentra, o -1 si no se encuentra.
+    '''
+    izq = 0
+    der = len(lista) - 1
+
+    while izq <= der:
+        medio = (izq + der) // 2
+        if lista[medio] == valor:
+            return medio
+        elif lista[medio] < valor:
+            izq = medio + 1
+        elif lista[medio] > valor:
+            der = medio - 1
+    return -1
+
 
 
 def pedir_indice_por_codigo(mensaje, codigos):
@@ -164,18 +187,3 @@ def eliminar_en_listas_paralelas(listas, indice):
     while i < len(listas):
         listas[i].pop(indice)
         i += 1
-
-
-def busqueda_binaria(lista, valor):
-    izq = 0
-    der = len(lista) - 1
-
-    while izq <= der:
-        medio = (izq + der) // 2
-        if lista[medio] == valor:
-            return medio
-        elif lista[medio] < valor:
-            izq = medio + 1
-        elif lista[medio] > valor:
-            der = medio - 1
-    return -1
