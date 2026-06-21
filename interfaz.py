@@ -1,7 +1,7 @@
 import tkinter as tk
 
 from constantes.constantes import (
-    usuarios, claves,
+    usuario, clave,
     codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes,
     codigos_productos, nombres_productos, precios_productos,
     codigos_ventas, ventas_clientes, ventas_productos, ventas_cantidades, medios_pago,
@@ -65,7 +65,7 @@ def hacer_login():
     user = user_entry.get()
     password = pass_entry.get()
 
-    if user == usuarios and password == claves:
+    if user == usuario and password == clave:
         logueado = True
         login_window.pack_forget()
         main_window.pack()
