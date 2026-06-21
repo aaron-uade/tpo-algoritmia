@@ -18,7 +18,8 @@ def mostrar_menu_principal():
     print("1. Clientes")
     print("2. Productos")
     print("3. Ventas")
-    print("4. Salir")
+    print("4. Estadisticas")
+    print("5. Salir")
     opcion = input("Selecciona una opcion: ")
     return opcion
 

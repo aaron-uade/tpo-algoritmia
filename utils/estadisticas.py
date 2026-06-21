@@ -56,8 +56,28 @@ def obtener_cantidad_medio(matriz, medio):
         i += 1
     return cantidad
 
-#Matriz Estadisticas.
+#Calcular el total de la vta.
+def calcular_total_venta(indice_venta, ventas_productos, codigos_productos, ventas_cantidades, precios_productos):
+    indice_producto = obtener_indice_por_codigo(codigos_productos, ventas_productos[indice_venta])
 
+    if indice_producto == -1:
+        return 0.0
+    return ventas_cantidades[indice_venta] * precios_productos[indice_producto]
+
+
+#La MATRIZ
+def listas_a_matriz_ventas(codigos_ventas, medios_pago, ventas_productos, codigos_productos, ventas_cantidades, precios_productos):
+    matriz = []
+    i = 0
+    while i < len(codigos_ventas):
+        total = calcular_total_venta(i, ventas_productos, codigos_productos, ventas_cantidades, precios_productos)
+        fila = [codigos_ventas[i], medios_pago[i], total]
+        matriz.append(fila)
+        i += 1
+    return matriz
+
+
+#Matriz Estadisticas.
 def traducir_medio(medio):
     if medio == 1:
         return "Efectivo"
@@ -65,7 +85,7 @@ def traducir_medio(medio):
         return "Tarjeta"
     else:
         return "Transferencia"
-    
+
 
 def armar_matriz_estadisticas(matriz):
     medios_unicos = conservar_unicos_medios(matriz)

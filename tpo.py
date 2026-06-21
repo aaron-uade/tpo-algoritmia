@@ -10,6 +10,9 @@ from crud.ventas import (
     listar_ventas, crear_venta, modificar_venta, buscar_venta, eliminar_venta
 )
 from validaciones.validadores import es_numero
+from utils.estadisticas import (
+    armar_matriz_estadisticas, imprimir_matriz_estadisticas, listas_a_matriz_ventas
+)
 from utils.utilidades import login, mostrar_menu_principal, mostrar_submenu
 from constantes.constantes import (
     codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes,
@@ -108,6 +111,15 @@ def menu_ventas():
             print("Opcion invalida.")
 
 
+def mostrar_estadisticas():
+    matriz_ventas = listas_a_matriz_ventas(
+        codigos_ventas, medios_pago, ventas_productos,
+        codigos_productos, ventas_cantidades, precios_productos
+    )
+    matriz_estadisticas = armar_matriz_estadisticas(matriz_ventas)
+    imprimir_matriz_estadisticas(matriz_estadisticas)
+
+
 login_usuario = login(usuario, clave)
 
 if login_usuario:
@@ -124,6 +136,8 @@ if login_usuario:
         elif opcion == "3":
             menu_ventas()
         elif opcion == "4":
+            mostrar_estadisticas()
+        elif opcion == "5":
             print("Hasta luego")
             salir = True
         else:

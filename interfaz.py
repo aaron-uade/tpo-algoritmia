@@ -6,7 +6,9 @@ from constantes.constantes import (
     codigos_productos, nombres_productos, precios_productos,
     codigos_ventas, ventas_clientes, ventas_productos, ventas_cantidades, medios_pago,
 )
-from utils.estadisticas import traducir_medio
+from utils.estadisticas import (
+    traducir_medio, armar_matriz_estadisticas, listas_a_matriz_ventas
+)
 from utils.utilidades import (
     obtener_indice_por_codigo,
     existe_en_lista,
@@ -96,6 +98,21 @@ def seleccionar_seccion(seccion):
     mostrar(f"Selecciona que deseas hacer con {seccion.capitalize()}\n")
 
 
+def mostrar_estadisticas():
+    matriz_ventas = listas_a_matriz_ventas(
+        codigos_ventas, medios_pago, ventas_productos,
+        codigos_productos, ventas_cantidades, precios_productos
+    )
+    matriz_estadisticas = armar_matriz_estadisticas(matriz_ventas)
+
+    texto = "ESTADISTICAS POR MEDIO DE PAGO\n"
+    texto += f"{'Medio':<16}{'Cantidad':>10}{'Total':>12}\n"
+    for nombre, cantidad, total in matriz_estadisticas:
+        texto += f"{nombre:<16}{cantidad:>10}{total:>12.2f}\n"
+
+    mostrar(texto)
+
+
 def salir():
     root.destroy()
 
@@ -103,6 +120,7 @@ def salir():
 tk.Button(menu_buttons, text="Clientes", command=lambda: seleccionar_seccion("clientes"), width=12).pack(side="left", padx=5)
 tk.Button(menu_buttons, text="Productos", command=lambda: seleccionar_seccion("productos"), width=12).pack(side="left", padx=5)
 tk.Button(menu_buttons, text="Ventas", command=lambda: seleccionar_seccion("ventas"), width=12).pack(side="left", padx=5)
+tk.Button(menu_buttons, text="Estadisticas", command=mostrar_estadisticas, width=12).pack(side="left", padx=5)
 tk.Button(menu_buttons, text="Salir", command=salir, width=12).pack(side="left", padx=5)
 
 submenu_frame = tk.Frame(main_window)
