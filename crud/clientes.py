@@ -1,5 +1,17 @@
-from validaciones.validadores import es_numero, validar_entrada_numerica_en_lista, validar_edad, validar_tipo
-from utils.utilidades import ordenar_burbuja, preguntar_orden, obtener_indice_por_codigo
+from validaciones.validadores import (
+    es_numero,
+    validar_entrada_numerica_en_lista,
+    validar_edad,
+    validar_tipo,
+    validar_opcion_entre,
+)
+from utils.utilidades import (
+    ordenar_burbuja,
+    preguntar_orden,
+    pedir_indice_por_codigo,
+    existe_en_lista,
+    eliminar_en_listas_paralelas,
+)
 
 
 def ver_clientes(codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes):
@@ -13,22 +25,16 @@ def ver_clientes(codigos_clientes, nombres_clientes, edades_clientes, tipos_clie
 
 def listar_clientes(codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes):
     entrada = preguntar_orden()
-    while not es_numero(entrada, "int") or int(entrada) < 1 or int(entrada) > 3:
-        print("Opción inválida.")
-        entrada = preguntar_orden()
-    orden = int(entrada)
+    orden = validar_opcion_entre(entrada, 1, 3)
 
     if orden == 1:
         ver_clientes(codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes)
         return
 
     es_descendente = orden == 3
-    print("Ordenar por: 1. Código 2. Edad")
-    entrada = input("Seleccione una opción: ")
-    while not es_numero(entrada, "int") or int(entrada) < 1 or int(entrada) > 2:
-        print("Opción inválida.")
-        entrada = input("Seleccione una opción: ")
-    campo = int(entrada)
+    print("Ordenar por: 1. Codigo 2. Edad")
+    entrada = input("Seleccione una opcion: ")
+    campo = validar_opcion_entre(entrada, 1, 2)
 
     indice_clave = 0 if campo == 1 else 2
     listas = [codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes]
@@ -59,64 +65,65 @@ def crear_cliente(codigos_clientes, nombres_clientes, edades_clientes, tipos_cli
 
 def modificar_cliente(codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes):
     ver_clientes(codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes)
-    entrada = input("Código de cliente: ")
-    while not es_numero(entrada, "int"):
-        print("Ingrese un número válido.")
-        entrada = input("Código de cliente: ")
-    cod_cliente = int(entrada)
-    indice_cliente = obtener_indice_por_codigo(codigos_clientes, cod_cliente)
+    _, indice_cliente = pedir_indice_por_codigo("Codigo de cliente: ", codigos_clientes)
     if indice_cliente == -1:
-        print("Código inválido")
+        print("Codigo invalido")
         return
 
     _modificar_campos_cliente(indice_cliente, nombres_clientes, edades_clientes, tipos_clientes)
 
 
 def buscar_cliente(codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes):
-    entrada = input("Ingrese el código que desea buscar: ")
-    while not es_numero(entrada, "int"):
-        entrada = input("Ingrese un código numérico: ")
-    codigo = int(entrada)
-    indice = _buscar_indice_cliente(codigo, codigos_clientes)
+    _, indice = pedir_indice_por_codigo("Ingrese el codigo que desea buscar: ", codigos_clientes)
     mostrar_cliente(indice, codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes)
 
 
 def mostrar_cliente(indice, codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes):
     if indice == -1:
-        print("No se encontró el valor en la lista.")
+        print("No se encontro el valor en la lista.")
         return
 
     tipo = "Regular" if tipos_clientes[indice] == 1 else "Frecuente"
     print(f"Cod: {codigos_clientes[indice]} | {nombres_clientes[indice]} | Edad: {edades_clientes[indice]} | {tipo}")
 
-
-def _buscar_indice_cliente(codigo, codigos_clientes):
-    return obtener_indice_por_codigo(codigos_clientes, codigo)
-
-
 def _modificar_campos_cliente(indice, nombres_clientes, edades_clientes, tipos_clientes):
     entrada = input("Modificar: 1. Nombre 2. Edad 3. Tipo: ")
-    while not es_numero(entrada, "int") or int(entrada) < 1 or int(entrada) > 3:
-        print("Opción inválida.")
-        entrada = input("Modificar: 1. Nombre 2. Edad 3. Tipo: ")
-    mod = int(entrada)
+    mod = validar_opcion_entre(entrada, 1, 3)
 
     if mod == 1:
         nuevo_nombre = input("Ingrese el nuevo nombre: ")
         nombre_viejo = nombres_clientes[indice]
         nombres_clientes[indice] = nuevo_nombre
-        print(f"Se cambió {nombre_viejo} a {nuevo_nombre}.")
+        print(f"Se cambio {nombre_viejo} a {nuevo_nombre}.")
     elif mod == 2:
         entrada = input("Ingrese la nueva edad: ")
         while not es_numero(entrada, "int"):
-            print("Ingrese un número válido.")
+            print("Ingrese un numero valido.")
             entrada = input("Ingrese la nueva edad: ")
         nueva_edad = int(entrada)
         edad_vieja = edades_clientes[indice]
         edades_clientes[indice] = nueva_edad
-        print(f"Se cambió la edad de {nombres_clientes[indice]} de {edad_vieja} a {nueva_edad} años.")
+        print(f"Se cambio la edad de {nombres_clientes[indice]} de {edad_vieja} a {nueva_edad} anios.")
     else:
         tipo_viejo = tipos_clientes[indice]
         tipos_clientes[indice] = 2 if tipo_viejo == 1 else 1
         tipo_nuevo = "Frecuente" if tipos_clientes[indice] == 2 else "Regular"
-        print(f"Se cambió el tipo de {nombres_clientes[indice]} a {tipo_nuevo}.")
+        print(f"Se cambio el tipo de {nombres_clientes[indice]} a {tipo_nuevo}.")
+
+
+def eliminar_cliente(codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes, ventas_clientes):
+    ver_clientes(codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes)
+    cod_cliente, indice_cliente = pedir_indice_por_codigo("Codigo de cliente a eliminar: ", codigos_clientes)
+    if indice_cliente == -1:
+        print("Codigo invalido")
+        return
+
+    if existe_en_lista(ventas_clientes, cod_cliente):
+        print("No se puede eliminar el cliente porque tiene ventas asociadas.")
+        return
+
+    eliminar_en_listas_paralelas(
+        [codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes],
+        indice_cliente,
+    )
+    print("Cliente eliminado exitosamente.")

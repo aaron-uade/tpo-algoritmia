@@ -1,13 +1,19 @@
-from validaciones.validadores import es_numero, validar_codigo_existente, validar_entero_positivo, validar_opcion_entre
+from validaciones.validadores import validar_codigo_existente, validar_entero_positivo, validar_opcion_entre
 from crud.clientes import modificar_cliente, ver_clientes
 from crud.productos import modificar_producto, ver_productos
-from utils.utilidades import ordenar_insercion, preguntar_orden, obtener_indice_por_codigo
-from constantes.constantes import medios_pago
+from utils.utilidades import (
+    ordenar_insercion,
+    preguntar_orden,
+    obtener_indice_por_codigo,
+    pedir_indice_por_codigo,
+    eliminar_en_listas_paralelas,
+)
+from utils.estadisticas import traducir_medio
 
 
 def ver_ventas(codigos_ventas, ventas_clientes, codigos_clientes, nombres_clientes,
                ventas_productos, codigos_productos, nombres_productos,
-               ventas_cantidades, precios_productos):
+               ventas_cantidades, precios_productos, medios_pago):
     print("\n--- HISTORIAL DE VENTAS ---")
     i = 0
     while i < len(codigos_ventas):
@@ -25,31 +31,27 @@ def ver_ventas(codigos_ventas, ventas_clientes, codigos_clientes, nombres_client
             nombre_producto = nombres_productos[indice_producto]
             total = ventas_cantidades[i] * precios_productos[indice_producto]
 
-        print(f"Venta {codigos_ventas[i]} | {nombre_cliente} | {nombre_producto} x{ventas_cantidades[i]} | ${total:.2f}")
+        medio = traducir_medio(medios_pago[i])
+        print(f"Venta {codigos_ventas[i]} | {nombre_cliente} | {nombre_producto} x{ventas_cantidades[i]} | {medio} | ${total:.2f}")
         i += 1
 
 
 def listar_ventas(codigos_ventas, ventas_clientes, codigos_clientes, nombres_clientes,
-                  ventas_productos, codigos_productos, nombres_productos, ventas_cantidades, precios_productos):
+                  ventas_productos, codigos_productos, nombres_productos,
+                  ventas_cantidades, precios_productos, medios_pago):
     entrada = preguntar_orden()
-    while not es_numero(entrada, "int") or int(entrada) < 1 or int(entrada) > 3:
-        print("Opción inválida.")
-        entrada = preguntar_orden()
-    orden = int(entrada)
+    orden = validar_opcion_entre(entrada, 1, 3)
 
     if orden == 1:
         ver_ventas(codigos_ventas, ventas_clientes, codigos_clientes, nombres_clientes,
                    ventas_productos, codigos_productos, nombres_productos,
-                   ventas_cantidades, precios_productos)
+                   ventas_cantidades, precios_productos, medios_pago)
         return
 
     es_descendente = orden == 3
-    print("Ordenar por: 1. Código 2. Cantidad 3. Medio de pago")
-    entrada = input("Seleccione una opción: ")
-    while not es_numero(entrada, "int") or int(entrada) < 1 or int(entrada) > 3:
-        print("Opción inválida.")
-        entrada = input("Seleccione una opción: ")
-    campo = int(entrada)
+    print("Ordenar por: 1. Codigo 2. Cantidad 3. Medio de pago")
+    entrada = input("Seleccione una opcion: ")
+    campo = validar_opcion_entre(entrada, 1, 3)
 
     if campo == 1:
         indice_clave = 0
@@ -62,19 +64,19 @@ def listar_ventas(codigos_ventas, ventas_clientes, codigos_clientes, nombres_cli
     listas_ordenadas = ordenar_insercion(listas, indice_clave, es_descendente)
     ver_ventas(listas_ordenadas[0], listas_ordenadas[1], codigos_clientes, nombres_clientes,
                listas_ordenadas[2], codigos_productos, nombres_productos,
-               listas_ordenadas[3], precios_productos)
+               listas_ordenadas[3], precios_productos, listas_ordenadas[4])
 
 
 def crear_venta(codigos_ventas, ventas_clientes, ventas_productos, ventas_cantidades, medios_pago,
-                 codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes,
-                 codigos_productos, nombres_productos, precios_productos):
+                codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes,
+                codigos_productos, nombres_productos, precios_productos):
     print("\n--- NUEVA VENTA ---")
     ver_clientes(codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes)
-    entrada = input("Código de cliente: ")
+    entrada = input("Codigo de cliente: ")
     cod_cliente = validar_codigo_existente(entrada, codigos_clientes)
 
     ver_productos(codigos_productos, nombres_productos, precios_productos)
-    entrada = input("Código de producto: ")
+    entrada = input("Codigo de producto: ")
     cod_producto = validar_codigo_existente(entrada, codigos_productos)
 
     entrada = input("Cantidad: ")
@@ -99,23 +101,14 @@ def modificar_venta(codigos_ventas, ventas_clientes, codigos_clientes, nombres_c
                     ventas_cantidades, medios_pago):
     ver_ventas(codigos_ventas, ventas_clientes, codigos_clientes, nombres_clientes,
                ventas_productos, codigos_productos, nombres_productos,
-               ventas_cantidades, precios_productos)
-    entrada = input("Código de venta: ")
-    while not es_numero(entrada, "int"):
-        print("Ingrese un número válido.")
-        entrada = input("Código de venta: ")
-    cod_venta = int(entrada)
-
-    indice_venta = _buscar_indice_venta(codigos_ventas, cod_venta)
+               ventas_cantidades, precios_productos, medios_pago)
+    _, indice_venta = pedir_indice_por_codigo("Codigo de venta: ", codigos_ventas)
     if indice_venta == -1:
-        print("Código de venta inválido")
+        print("Codigo de venta invalido")
         return
 
     entrada = input("Modificar: 1. Cliente 2. Producto 3. Cantidad 4. Medio de pago: ")
-    while not es_numero(entrada, "int") or int(entrada) < 1 or int(entrada) > 4:
-        print("Opción inválida.")
-        entrada = input("Modificar: 1. Cliente 2. Producto 3. Cantidad 4. Medio de pago: ")
-    mod = int(entrada)
+    mod = validar_opcion_entre(entrada, 1, 4)
 
     if mod == 1:
         modificar_cliente(codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes)
@@ -123,40 +116,30 @@ def modificar_venta(codigos_ventas, ventas_clientes, codigos_clientes, nombres_c
         modificar_producto(codigos_productos, nombres_productos, precios_productos)
     elif mod == 3:
         entrada = input("Nueva cantidad: ")
-        while not es_numero(entrada, "int"):
-            print("Ingrese un número válido.")
-            entrada = input("Nueva cantidad: ")
-        nueva_cantidad = int(entrada)
+        cantidad = validar_entero_positivo(entrada)
         cantidad_vieja = ventas_cantidades[indice_venta]
-        ventas_cantidades[indice_venta] = nueva_cantidad
-        print(f"Se cambió la cantidad de {cantidad_vieja} a {nueva_cantidad}.")
+        ventas_cantidades[indice_venta] = cantidad
+        print(f"Se cambio la cantidad de {cantidad_vieja} a {cantidad}.")
     else:
         print("1. Efectivo  2. Tarjeta  3. Transferencia")
         entrada = input("Nuevo medio de pago: ")
-        while not es_numero(entrada, "int"):
-            print("Ingrese un número válido.")
-            entrada = input("Nuevo medio de pago: ")
-        nuevo_medio = int(entrada)
+        nuevo_medio = validar_opcion_entre(entrada, 1, 3)
         medio_viejo = medios_pago[indice_venta]
         medios_pago[indice_venta] = nuevo_medio
-        print(f"Se cambió el medio de pago de {medio_viejo} a {nuevo_medio}.")
+        print(f"Se cambio el medio de pago de {medio_viejo} a {nuevo_medio}.")
 
 
 def buscar_venta(codigos_ventas, ventas_clientes, codigos_clientes, nombres_clientes,
                  ventas_productos, codigos_productos, nombres_productos, ventas_cantidades, precios_productos, medios_pago):
-    entrada = input("Ingrese el código que desea buscar: ")
-    while not es_numero(entrada, "int"):
-        entrada = input("Ingrese un código numérico: ")
-    codigo = int(entrada)
-    indice = _buscar_indice_venta(codigos_ventas, codigo)
+    _, indice = pedir_indice_por_codigo("Ingrese el codigo que desea buscar: ", codigos_ventas)
     mostrar_venta(indice, codigos_ventas, ventas_clientes, codigos_clientes, nombres_clientes,
-                 ventas_productos, codigos_productos, nombres_productos, ventas_cantidades, precios_productos, medios_pago)
+                  ventas_productos, codigos_productos, nombres_productos, ventas_cantidades, precios_productos, medios_pago)
 
 
 def mostrar_venta(indice, codigos_ventas, ventas_clientes, codigos_clientes, nombres_clientes,
                   ventas_productos, codigos_productos, nombres_productos, ventas_cantidades, precios_productos, medios_pago):
     if indice == -1:
-        print("No se encontró el valor en la lista.")
+        print("No se encontro el valor en la lista.")
         return
 
     indice_cliente = obtener_indice_por_codigo(codigos_clientes, ventas_clientes[indice])
@@ -171,13 +154,23 @@ def mostrar_venta(indice, codigos_ventas, ventas_clientes, codigos_clientes, nom
     else:
         nombre_producto = nombres_productos[indice_producto]
 
-    print(f"Cod: {codigos_ventas[indice]} | {nombre_cliente} | {nombre_producto} x{ventas_cantidades[indice]} | Medio: {medios_pago[indice]}")
+    medio = traducir_medio(medios_pago[indice])
+    print(f"Cod: {codigos_ventas[indice]} | {nombre_cliente} | {nombre_producto} x{ventas_cantidades[indice]} | Medio: {medio}")
 
 
-def _buscar_indice_venta(codigos_ventas, codigo):
-    i = 0
-    while i < len(codigos_ventas):
-        if codigos_ventas[i] == codigo:
-            return i
-        i += 1
-    return -1
+def eliminar_venta(codigos_ventas, ventas_clientes, ventas_productos, ventas_cantidades, medios_pago,
+                   codigos_clientes, nombres_clientes, codigos_productos, nombres_productos, precios_productos):
+    print("\n--- ELIMINAR VENTA ---")
+    ver_ventas(codigos_ventas, ventas_clientes, codigos_clientes, nombres_clientes,
+               ventas_productos, codigos_productos, nombres_productos,
+               ventas_cantidades, precios_productos, medios_pago)
+    cod_venta, indice = pedir_indice_por_codigo("Codigo de venta a eliminar: ", codigos_ventas)
+    if indice == -1:
+        print("Codigo no encontrado.")
+        return
+
+    eliminar_en_listas_paralelas(
+        [codigos_ventas, ventas_clientes, ventas_productos, ventas_cantidades, medios_pago],
+        indice,
+    )
+    print(f"Venta {cod_venta} eliminada correctamente.")

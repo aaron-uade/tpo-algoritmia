@@ -1,3 +1,6 @@
+from validaciones.validadores import es_numero
+
+
 def login(usuarios, claves):
     acceso = False
     i = 0
@@ -12,14 +15,6 @@ def login(usuarios, claves):
 
     return False
 
-def obtener_indice_por_codigo(codigos, codigo):
-    i = 0
-    while i < len(codigos):
-        if codigos[i] == codigo:
-            return i
-        i += 1
-    return -1
-
 
 def mostrar_menu_principal():
     print("\n--- MENU PRINCIPAL ---")
@@ -27,7 +22,7 @@ def mostrar_menu_principal():
     print("2. Productos")
     print("3. Ventas")
     print("4. Salir")
-    opcion = input("Selecciona una opción: ")
+    opcion = input("Selecciona una opcion: ")
     return opcion
 
 
@@ -37,17 +32,18 @@ def mostrar_submenu(nombre):
     print("2. Nuevo")
     print("3. Modificar")
     print("4. Buscar")
-    print("5. Volver al menú principal")
-    opcion = input("Selecciona una opción: ")
+    print("5. Eliminar")
+    print("6. Volver al menu principal")
+    opcion = input("Selecciona una opcion: ")
     return opcion
 
 
 def preguntar_orden():
-    print("\n¿Cómo desea ver el listado?")
+    print("\nComo desea ver el listado?")
     print("1. Orden de carga (sin ordenar)")
     print("2. Ascendente")
     print("3. Descendente")
-    opcion = input("Selecciona una opción: ")
+    opcion = input("Selecciona una opcion: ")
     return opcion
 
 
@@ -140,13 +136,37 @@ def ordenar_insercion(listas, indice_clave, es_descendente):
 
     return copias
 
-def busqueda_secuencial(lista, valor):
-    k = 0
-    for k in range(len(lista) - 1):
-        if lista[k] == valor:
-            return k
-        k += 1
+
+def obtener_indice_por_codigo(codigos, codigo):
+    i = 0
+    while i < len(codigos):
+        if codigos[i] == codigo:
+            return i
+        i += 1
     return -1
+
+
+def pedir_indice_por_codigo(mensaje, codigos):
+    entrada = input(mensaje)
+    while not es_numero(entrada, "int"):
+        print("Ingrese un numero valido.")
+        entrada = input(mensaje)
+
+    codigo = int(entrada)
+    indice = obtener_indice_por_codigo(codigos, codigo)
+    return codigo, indice
+
+
+def existe_en_lista(lista, valor):
+    return obtener_indice_por_codigo(lista, valor) != -1
+
+
+def eliminar_en_listas_paralelas(listas, indice):
+    i = 0
+    while i < len(listas):
+        listas[i].pop(indice)
+        i += 1
+
 
 def busqueda_binaria(lista, valor):
     izq = 0

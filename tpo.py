@@ -1,13 +1,13 @@
-# Sistema de Gestión de ventas
+# Sistema de Gestion de ventas
 
 from crud.clientes import (
-    listar_clientes, crear_cliente, modificar_cliente, buscar_cliente
+    listar_clientes, crear_cliente, modificar_cliente, buscar_cliente, eliminar_cliente
 )
 from crud.productos import (
-    listar_productos, crear_producto, modificar_producto, buscar_producto
+    listar_productos, crear_producto, modificar_producto, buscar_producto, eliminar_producto
 )
 from crud.ventas import (
-    listar_ventas, crear_venta, modificar_venta, buscar_venta
+    listar_ventas, crear_venta, modificar_venta, buscar_venta, eliminar_venta
 )
 from validaciones.validadores import es_numero
 from utils.utilidades import login, mostrar_menu_principal, mostrar_submenu
@@ -21,7 +21,7 @@ from constantes.constantes import (
 
 def leer_opcion_valida(entrada):
     while not es_numero(entrada, "int"):
-        entrada = input("Ingrese una opción válida: ")
+        entrada = input("Ingrese una opcion valida: ")
     return int(entrada)
 
 
@@ -39,9 +39,11 @@ def menu_clientes():
         elif opcion == 4:
             buscar_cliente(codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes)
         elif opcion == 5:
+            eliminar_cliente(codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes, ventas_clientes)
+        elif opcion == 6:
             break
         else:
-            print("Opción inválida")
+            print("Opcion invalida")
 
 
 def menu_productos():
@@ -58,9 +60,11 @@ def menu_productos():
         elif opcion == 4:
             buscar_producto(codigos_productos, nombres_productos, precios_productos)
         elif opcion == 5:
+            eliminar_producto(codigos_productos, nombres_productos, precios_productos, ventas_productos)
+        elif opcion == 6:
             break
         else:
-            print("Opción inválida")
+            print("Opcion invalida")
 
 
 def menu_ventas():
@@ -72,7 +76,7 @@ def menu_ventas():
             listar_ventas(
                 codigos_ventas, ventas_clientes, codigos_clientes, nombres_clientes,
                 ventas_productos, codigos_productos, nombres_productos,
-                ventas_cantidades, precios_productos
+                ventas_cantidades, precios_productos, medios_pago
             )
         elif opcion == 2:
             crear_venta(
@@ -83,6 +87,7 @@ def menu_ventas():
         elif opcion == 3:
             modificar_venta(
                 codigos_ventas, ventas_clientes, codigos_clientes, nombres_clientes,
+                edades_clientes, tipos_clientes,
                 ventas_productos, codigos_productos, nombres_productos,
                 ventas_cantidades, precios_productos, medios_pago
             )
@@ -93,12 +98,16 @@ def menu_ventas():
                 ventas_cantidades, precios_productos, medios_pago
             )
         elif opcion == 5:
+            eliminar_venta(
+                codigos_ventas, ventas_clientes, ventas_productos, ventas_cantidades, medios_pago,
+                codigos_clientes, nombres_clientes, codigos_productos, nombres_productos, precios_productos
+            )
+        elif opcion == 6:
             break
         else:
-            print("Opción inválida.")
+            print("Opcion invalida.")
 
 
-# Programa principal
 login_usuario = login(usuarios, claves)
 
 if login_usuario:
@@ -118,6 +127,6 @@ if login_usuario:
             print("Hasta luego")
             salir = True
         else:
-            print("Opción inválida")
+            print("Opcion invalida")
 else:
     print("Usuario incorrecto")
