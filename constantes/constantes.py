@@ -1,5 +1,5 @@
-usuarios = ["admin"]
-claves = ["1234"]
+usuario = "admin"
+clave = "1234"
 
 # Clientes
 codigos_clientes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]

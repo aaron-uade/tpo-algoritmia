@@ -15,7 +15,7 @@ from constantes.constantes import (
     codigos_clientes, nombres_clientes, edades_clientes, tipos_clientes,
     codigos_productos, nombres_productos, precios_productos,
     codigos_ventas, ventas_clientes, ventas_productos, ventas_cantidades,
-    medios_pago, usuarios, claves
+    medios_pago, usuario, clave
 )
 
 
@@ -108,7 +108,7 @@ def menu_ventas():
             print("Opcion invalida.")
 
 
-login_usuario = login(usuarios, claves)
+login_usuario = login(usuario, clave)
 
 if login_usuario:
     print("Usuario correcto\n")

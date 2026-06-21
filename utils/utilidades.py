@@ -1,19 +1,16 @@
 from validaciones.validadores import es_numero
 
 
-def login(usuarios, claves):
-    acceso = False
-    i = 0
-
-    while acceso == False and i < len(usuarios):
+def login(usuario, clave):
+    usuario_actual = input("Usuario: ")
+    clave_actual = input("Clave: ")
+    intentos = 1
+    while (usuario_actual != usuario or clave_actual != clave) and intentos < 3:
+        print("Usuario o clave incorrectos. Intente nuevamente.")
         usuario_actual = input("Usuario: ")
         clave_actual = input("Clave: ")
-
-        if usuario_actual == usuarios[i] and clave_actual == claves[i]:
-            return True
-        i += 1
-
-    return False
+        intentos += 1
+    return usuario_actual == usuario and clave_actual == clave
 
 
 def mostrar_menu_principal():
