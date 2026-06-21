@@ -19,5 +19,3 @@ ventas_clientes = [1, 3, 2, 5, 4, 1, 6, 2, 7, 3]
 ventas_productos = [101, 103, 102, 104, 105, 106, 107, 108, 109, 110]
 ventas_cantidades = [1, 2, 3, 1, 5, 2, 1, 4, 2, 1]
 medios_pago = [1, 2, 1, 3, 2, 1, 2, 3, 1, 2]
-
-edad_maxima = 99
